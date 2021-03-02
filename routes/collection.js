@@ -20,7 +20,7 @@ app.use(express.json())
 // all routes in here are starting with / users
 
 //Post/Create a collection
-router.post('/', async (req, res) => {
+router.post('/collections', async (req, res) => {
     try{
         const { name } = req.body;
         const newCollection = await pool.query("INSERT INTO collections (name) VALUES ($1) RETURNING * ", 
@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
 });
 
 //Get all collections
-router.get('/',async (req, res) => {
+router.get('/collections',async (req, res) => {
     try {
         const allCollections = await pool.query("SELECT * FROM collections");
         res.status(200)
@@ -53,7 +53,7 @@ router.get('/',async (req, res) => {
 
 
 //Get a collection
-router.get('/:id', async (req, res) => {
+router.get('/collections/:id', async (req, res) => {
     const{id} = req.params
     try{
         const collection = await pool.query("SELECT * FROM collections WHERE collections_id = $1",[id])
@@ -66,7 +66,7 @@ router.get('/:id', async (req, res) => {
 })
 
 //Update a collection
-router.put("/:id", async (req,res)=>{
+router.put("/collections/:id", async (req,res)=>{
     const{id} = req.params; //WHERE
     try{
        const {name} = req.body; //SET
