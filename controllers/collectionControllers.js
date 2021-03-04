@@ -31,6 +31,7 @@ export const controller = {
             const allCollections = await pool.query("SELECT * FROM collections");
             res.status(200)
             .json(success("success", { "current_page": 1, data: allCollections.rows , apiinfo}, res.statusCode))
+            
         }catch (err) {
             console.error(err.message)
         }
