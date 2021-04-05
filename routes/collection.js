@@ -1,5 +1,6 @@
 import express from  'express';
 import {controller} from '../controllers/collectionControllers.js'
+import {middleware} from '../models/middleware.js';
 
 //console.log(success)
 const app = express();
@@ -9,7 +10,7 @@ app.use(express.json())
 // all routes in here are starting with / users
 
 //Post/Create a collection
-router.post('/collections', controller.post);
+router.post('/collections',middleware("collections") , controller.post);
 
 //Get all collections
 router.get('/collections', controller.get );
@@ -19,7 +20,7 @@ router.get('/collections', controller.get );
 router.get('/collections/:id', controller.getone)
 
 //Update a collection
-router.put("/collections/:id", controller.put)
+router.put("/collections/:id", middleware("collections"), controller.put)
 
 //delete a collection
 router.delete("/:id", controller.delete)

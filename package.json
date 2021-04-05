@@ -11,8 +11,14 @@
   "author": "Dayo Michael",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^7.4.2",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-handlebars": "^5.2.1",
+    "joi": "^17.4.0",
+    "nodemailer": "^6.5.0",
+    "nodemailer-express-handlebars": "^4.0.0",
     "pg": "^8.5.1"
   },
   "devDependencies": {

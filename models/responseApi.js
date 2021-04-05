@@ -32,8 +32,8 @@
        const codes = [200, 201, 400, 401, 403, 404, 422, 500];
        //Get matched code
        const findCode = codes.find((code) => code == statusCode);
-       if (!findCode) stausCode = 500;
-       else stausCode = findCode;
+       if (!findCode) statusCode = 500;
+       else statusCode = findCode;
 
        return {
            status:"failed",

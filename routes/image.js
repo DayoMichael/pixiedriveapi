@@ -1,5 +1,8 @@
 import express from  'express';
-import {controller} from '../controllers/imageControllers.js'
+import {controller} from '../controllers/imageControllers.js';
+import {middleware} from '../models/middleware.js';
+
+
 
 //console.log(success)
 const app = express();
@@ -19,7 +22,7 @@ app.use(express.json())
 // all routes in here are starting with / users
 
 //Post/Create a image
-router.post('/sets/:set_id/images', controller.post);
+router.post('/sets/:set_id/images', middleware("collections"), controller.post);
 
 //Get all images
 router.get('/images/:set_id',controller.get);
@@ -29,7 +32,7 @@ router.get('/images/:set_id',controller.get);
 router.get('/images/:image_id',controller.getone)
 
 //Update a collection
-router.put("/images/:image_id", controller.put)
+router.put("/images/:image_id", middleware("collections"), controller.put)
 
 //delete a collection
 router.delete("/images/:images_id", controller.delete)

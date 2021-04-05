@@ -1,5 +1,7 @@
-import {pool} from '../models/db.js';
-import {success} from '../models/responseApi.js'
+//import {pool} from '../models/db.js';
+import {success, error} from '../models/responseApi.js';
+import {colquery} from '../models/queries.js';
+
 
 const apiinfo= {"first_page_url": "http://galleryservice.test?page=1",
 "from": 1,
@@ -15,24 +17,29 @@ const apiinfo= {"first_page_url": "http://galleryservice.test?page=1",
 export const controller = {
     post: async (req, res) => {
         try{
+            
             const { name } = req.body;
-            const newCollection = await pool.query("INSERT INTO collections (name) VALUES ($1) RETURNING * ", 
+            let request = req.app.locals.db
+            const newCollection = await request.query(colquery.post, 
             [name]);
             res.status(200)
             .json(success("Collection created", newCollection.rows[0], res.statusCode ))
             console.log(req.body)
         } catch(err){
+            res.status(500).json(error(err.message, res.statusCode))
             console.error(err.message)
         }
         
     },
     get: async (req, res) => {
         try {
-            const allCollections = await pool.query("SELECT * FROM collections");
+            let request = req.app.locals.db
+            const allCollections = await request.query(colquery.getall);
             res.status(200)
             .json(success("success", { "current_page": 1, data: allCollections.rows , apiinfo}, res.statusCode))
             
         }catch (err) {
+            res.status(500).json(error(err.message, res.statusCode))
             console.error(err.message)
         }
     },
@@ -40,11 +47,14 @@ export const controller = {
     getone: async (req, res) => {
         const{id} = req.params
         try{
-            const collection = await pool.query("SELECT * FROM collections WHERE collections_id = $1",[id])
+            let request = req.app.locals.db
+            const collection = await request.query(colquery.getone,[id])
             res.status(200)
             .json(success("success", collection.rows[0], res.statusCode))
         }catch (err) {
-            console.error(err.message)
+            res.status(500)
+            .json(error(err.message, res.statusCode))
+            console.error(err.message) 
     
         }
     },
@@ -53,12 +63,13 @@ export const controller = {
         const{id} = req.params; //WHERE
         try{
            const {name} = req.body; //SET
-    
-           const updateCollection = await pool.query("UPDATE collections SET name = $1 WHERE collections_id = $2", [name, id]);
+           let request = req.app.locals.db
+           const updateCollection = await request.query(colquery.put, [name, id]);
     
            res.status(200)
            .json(success("success", "Data Updated", res.statusCode)) 
         }catch (err) {
+            res.status(500).json(error(err.message, 500 ))
             console.error(err.message)
         }
     },
@@ -67,10 +78,12 @@ export const controller = {
         const{id} = req.params; //WHERE
         try{
            const {name} = req.body; //SET
-           const deletecollection = await pool.query("DELETE FROM collections WHERE collections_id = $1", [id]);
+           let request = req.app.locals.db
+           const deletecollection = await request.query(colquery.delete, [id]);
            res.status(200)
            .json(success("success", "Data Deleted", res.statusCode)) 
         }catch (err) {
+            res.status(500).json(error(err.message, res.statusCode))
             console.error(err.message)
         }
     }
